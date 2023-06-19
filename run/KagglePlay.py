@@ -1,7 +1,4 @@
 #%%
-import random
-import numpy as np
-
 from kaggle_environments import make
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs, get_win_percentages
 from src.ModelToAgent import model_to_agent
