@@ -4,11 +4,17 @@ import random
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-#%matplotlib inline
 
 import gym
 from kaggle_environments import make, evaluate
 from gym import spaces
+
+import torch as th
+import torch.nn as nn
+
+from stable_baselines3 import PPO 
+from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
+
 
 def get_win_percentages(agent1, agent2, n_rounds=100):
     # Use default Connect Four setup
@@ -59,14 +65,6 @@ class ConnectFourGym(gym.Env):
         return np.array(self.obs['board']).reshape(1,self.rows,self.columns), reward, done, _
     
 
-env = ConnectFourGym(agent2="random")
-
-
-import torch as th
-import torch.nn as nn
-
-from stable_baselines3 import PPO 
-from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 
 # Neural network for predicting action values
 class CustomCNN(BaseFeaturesExtractor):
@@ -98,55 +96,8 @@ policy_kwargs = dict(
     features_extractor_class=CustomCNN,
 )
         
-# Initialize agent
-model = PPO("CnnPolicy", env, policy_kwargs=policy_kwargs, verbose=0)
-
-# Train agent
-model.learn(total_timesteps=60000)
 
 
-##
 
-# Save agent
-model.save("./models/first_agent")
-# Load agent
-model_loaded = PPO("CnnPolicy", env, policy_kwargs=policy_kwargs, verbose=0)
-model_loaded = PPO.load("./models/first_agent")
-
-##
-
-
-def agent1(obs, config):
-    # Use the best model to select a column
-    col, _ = model.predict(np.array(obs['board']).reshape(1, 6,7))
-    # Check if selected column is valid
-    is_valid = (obs['board'][int(col)] == 0)
-    # If not valid, select random move. 
-    if is_valid:
-        return int(col)
-    else:
-        return random.choice([col for col in range(config.columns) if obs.board[int(col)] == 0])
     
 
-def agent2(obs, config):
-    # Use the best model to select a column
-    col, _ = model_loaded.predict(np.array(obs['board']).reshape(1, 6,7))
-    # Check if selected column is valid
-    is_valid = (obs['board'][int(col)] == 0)
-    # If not valid, select random move. 
-    if is_valid:
-        return int(col)
-    else:
-        return random.choice([col for col in range(config.columns) if obs.board[int(col)] == 0])
-
-
-# Create the game environment
-env = make("connectx")
-
-# Two random agents play one game round
-env.run([agent1, "random"])
-
-# Show the game
-#env.render(mode="ipython")
-
-print(get_win_percentages(agent1=agent1, agent2="random"))

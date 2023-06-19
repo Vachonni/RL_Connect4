@@ -14,12 +14,12 @@
         "vscode": {
             "extensions": [
 		        "ms-python.python",
-		        "tht13.python",
+				"ms-toolsai.jupyter",
 				"GitHub.copilot-nightly"
 	        ] }},
 
 	"mounts": [
-		"source=/Users/nicholasvachon/Code/Repos/Consort/RL-Connect4,target=/home/src,type=bind,consistency=cached"
+		"source=/Users/nicholasvachon/Code/Repos/Consort/RL_Connect4,target=/home/src,type=bind,consistency=cached"
 	  ],
 	  
 	"runArgs": [

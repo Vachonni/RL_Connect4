@@ -7,3 +7,5 @@ shimmy>=0.2.1
 kaggle_environments==1.12.0
 gym==0.26.2
 # torch
+ipython==8.14.0
+ipykernel==6.23.2
