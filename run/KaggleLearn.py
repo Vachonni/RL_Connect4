@@ -1,5 +1,5 @@
-import random
-import numpy as np
+# This file is used to train a new agent that will learn to beat the adversary agent
+
 
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs
 from src.ModelToAgent import model_to_agent
