@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs, get_win_percentages
+from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs
 
 
 
