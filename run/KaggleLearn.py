@@ -28,21 +28,19 @@ def learn_multi(path_base_model, path_new_model, test_rounds=1000):
 
     # Initial setup
     count = 0
-    wins_agent1 = 0
-    wins_agent2 = 1
     base_agent = modelpath_to_agent(path_base_model)
 
     # Train once
     new_model = learn_once(path_base_model, path_new_model, save=False)
     new_agent = model_to_agent(new_model)
-    wins_agent1, wins_agent2 = get_win_percentages(agent1=base_agent,
-                                                   agent2=new_agent,
-                                                   n_rounds=test_rounds)
+    wins_base_agent, wins_new_agent = get_win_percentages(agent1=base_agent,
+                                                          agent2=new_agent,
+                                                          n_rounds=test_rounds)
     count += 1
 
-    while wins_agent1 < wins_agent2:
+    while wins_base_agent < wins_new_agent:
         print(f"Round: {count}.")
-        print(f"New agent is better, saving it.")
+        print(f"New agent is better ({wins_new_agent} > {wins_base_agent}), saving it.")
         # Save agent
         new_model.save(path_new_model)
         # New model becones the base model
@@ -51,11 +49,15 @@ def learn_multi(path_base_model, path_new_model, test_rounds=1000):
         # Train once
         new_model = learn_once(path_base_model, path_new_model, save=False)
         new_agent = model_to_agent(new_model)
-        wins_agent1, wins_agent2 = get_win_percentages(agent1=base_agent,
+        wins_base_agent, wins_new_agent = get_win_percentages(agent1=base_agent,
                                                        agent2=new_agent,
                                                        n_rounds=test_rounds)
 
 
 if __name__ == "__main__":
 
-    learn_once(path_base_model=PATH_BASE_MODEL, path_new_model=PATH_MEW_MODEL)
+    # learn_once(path_base_model=PATH_BASE_MODEL, 
+    #            path_new_model=PATH_MEW_MODEL)
+    learn_multi(path_base_model=PATH_BASE_MODEL, 
+                path_new_model=PATH_MEW_MODEL, 
+                test_rounds=N_ROUNDS)
