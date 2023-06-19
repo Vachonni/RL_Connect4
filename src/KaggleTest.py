@@ -23,10 +23,13 @@ def get_win_percentages(agent1, agent2, n_rounds=100):
     outcomes = evaluate("connectx", [agent1, agent2], config, [], n_rounds//2)
     # Agent 2 goes first (roughly) half the time      
     outcomes += [[b,a] for [a,b] in evaluate("connectx", [agent2, agent1], config, [], n_rounds-n_rounds//2)]
-    print("Agent 1 Win Percentage:", np.round(outcomes.count([1,-1])/len(outcomes), 2))
-    print("Agent 2 Win Percentage:", np.round(outcomes.count([-1,1])/len(outcomes), 2))
+    wins_agent1 = np.round(outcomes.count([1,-1])/len(outcomes), 2)
+    wins_agent2 = np.round(outcomes.count([-1,1])/len(outcomes), 2)
+    print("Agent 1 Win Percentage:", wins_agent1)
+    print("Agent 2 Win Percentage:", wins_agent2)
     print("Number of Invalid Plays by Agent 1:", outcomes.count([None, 0]))
     print("Number of Invalid Plays by Agent 2:", outcomes.count([0, None]))
+    return wins_agent1, wins_agent2
 
 
 class ConnectFourGym(gym.Env):
