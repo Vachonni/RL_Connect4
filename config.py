@@ -26,17 +26,19 @@ path_plots = os.path.join(path_parent, "RL_Connect4", "artifacts", "plots")
 
 #%% MODELS PATHS
 # PATH_BASE_MODEL = "random"
-PATH_BASE_MODEL = os.path.join(path_models, "stop_agent_BR0_1000_100")
+# PATH_BASE_MODEL = os.path.join(path_models, "fourth_agent")
+PATH_BASE_MODEL = os.path.join(path_models, "stop_agent_6_1000_100")
 
-PATH_ADVERSARY_MODEL = os.path.join(path_models, "fourth_agent")
+PATH_ADVERSARY_MODEL = os.path.join(path_models, "stop_agent_6_1000_100")
+# PATH_ADVERSARY_MODEL = os.path.join(path_models, "fourth_agent")
 
-PATH_MEW_MODEL = os.path.join(path_models, f"stop_agent_AR1_{N_IT}_{N_ROUNDS}")
+PATH_MEW_MODEL = os.path.join(path_models, f"stop_agent_6_{N_IT}_{N_ROUNDS}")
 
 
 #%% LEARNING CURVES PATHS
-PATH_LEARNING_CURVES = os.path.join(path_learning_curves, f"df_wins_AR1_{N_IT}_{N_ROUNDS}")
+PATH_LEARNING_CURVES = os.path.join(path_learning_curves, f"df_wins_6_{N_IT}_{N_ROUNDS}")
 
 
 #%% PLOTS PATHS
-PATH_PLOT = os.path.join(path_plots, f"graph_AR1_{N_IT}_{N_ROUNDS}")
+PATH_PLOT = os.path.join(path_plots, f"graph_6_{N_IT}_{N_ROUNDS}")
 

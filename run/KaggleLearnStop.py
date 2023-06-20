@@ -4,18 +4,23 @@
 import pandas as pd
 
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs, get_win_percentages
-from src.ModelToAgent import modelpath_to_agent, model_to_agent
+from src.ModelToAgent import modelpath_to_agent, modelpath_to_model, model_to_agent
 from config import N_ROUNDS, N_IT, PATIENCE, PATH_BASE_MODEL, PATH_MEW_MODEL, PATH_LEARNING_CURVES, PATH_PLOT
 
 
 def learn_to_stop(path_base_model, path_new_model, n_it=1000, n_rounds=100):
+    """The base model is the one we want to learn to beat.
+    Hence, it is the adversary agent and the model we train."""
+
 
     # AGENT SETUP
     # Load adversary agent (the one we want to learn to beat)
-    base_agent = modelpath_to_agent(path_base_model)
-    # Set environment that will reply as adversary agent
-    env_adv = ConnectFourGym(agent2=base_agent)
-    model = PPO("CnnPolicy", env_adv, policy_kwargs=policy_kwargs, verbose=0)
+    # adv_agent is random. Not a problem, its environment will be replaced by the adversary agent's environment
+    adv_agent = modelpath_to_agent(path_base_model, adv_agent='random')
+
+    # MODEL SETUP
+    model = modelpath_to_model(path_base_model, adv_agent=adv_agent)
+    
 
     # LOOP SETUP
     all_wins = {"wins_vs_base": [], "wins_vs_random": []}
@@ -57,7 +62,7 @@ def learn_to_stop(path_base_model, path_new_model, n_it=1000, n_rounds=100):
 
         # Get win percentage
         print("Getting win percentage...")
-        _, new_win = get_win_percentages(agent1=base_agent,
+        _, new_win = get_win_percentages(agent1=adv_agent,
                                          agent2=new_agent,
                                          n_rounds=n_rounds)
         _, random_win = get_win_percentages(agent1="random",
@@ -72,13 +77,16 @@ def learn_to_stop(path_base_model, path_new_model, n_it=1000, n_rounds=100):
 
     return df_wins, max_win
 
+    
+
 
 #%%
 if __name__ == "__main__":
+
     df_wins, max_win = learn_to_stop(path_base_model=PATH_BASE_MODEL,
-                             path_new_model=PATH_MEW_MODEL,
-                             n_it=N_IT,
-                             n_rounds=N_ROUNDS)
+                                     path_new_model=PATH_MEW_MODEL,
+                                     n_it=N_IT,
+                                     n_rounds=N_ROUNDS)
 
     print(df_wins)
 

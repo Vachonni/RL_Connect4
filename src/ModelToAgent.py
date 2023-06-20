@@ -4,19 +4,19 @@ import numpy as np
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs
 
 
-def modelpath_to_model(model_path):
+def modelpath_to_model(model_path, adv_agent='random'):
 
+    # Set environment to reply as adversary agent
+    adv_env = ConnectFourGym(agent2=adv_agent)
+
+    # Get model
     if model_path == 'random':
-        return 'random'
+        model = PPO("CnnPolicy", adv_env, policy_kwargs=policy_kwargs, verbose=0)
+    else:
+        model = PPO.load(model_path, env=adv_env, verbose=0)
     
-    # Set environment basic
-    env = ConnectFourGym(agent2="random")
-
-    # Load model used by agent
-    model = PPO("CnnPolicy", env, policy_kwargs=policy_kwargs, verbose=0)
-    model = PPO.load(model_path)
-
     return model
+
 
 
 def model_to_agent(model):
@@ -39,9 +39,9 @@ def model_to_agent(model):
     return agent
 
 
-def modelpath_to_agent(model_path):
+def modelpath_to_agent(model_path, adv_agent='random'):
 
-    model = modelpath_to_model(model_path)
+    model = modelpath_to_model(model_path, adv_agent)
     agent = model_to_agent(model)
     
     return agent
