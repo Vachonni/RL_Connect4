@@ -5,7 +5,7 @@ import os
 #%%
 N_ROUNDS = 100
 
-N_IT = 5000
+N_IT = 10000
 
 N_LEARNING = 10
 
