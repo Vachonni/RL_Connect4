@@ -4,8 +4,7 @@ import numpy as np
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs
 
 
-
-def model_to_agent(model_path):
+def modelpath_to_model(model_path):
 
     if model_path == 'random':
         return 'random'
@@ -16,6 +15,14 @@ def model_to_agent(model_path):
     # Load model used by agent
     model = PPO("CnnPolicy", env, policy_kwargs=policy_kwargs, verbose=0)
     model = PPO.load(model_path)
+
+    return model
+
+
+def model_to_agent(model):
+
+    if model == 'random':
+        return 'random'
 
     # Build agent from model
     def agent(obs, config):
@@ -28,7 +35,13 @@ def model_to_agent(model_path):
             return int(col)
         else:
             return random.choice([col for col in range(config.columns) if obs.board[int(col)] == 0])
+        
     return agent
 
 
+def modelpath_to_agent(model_path):
 
+    model = modelpath_to_model(model_path)
+    agent = model_to_agent(model)
+    
+    return agent

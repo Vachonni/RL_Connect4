@@ -58,7 +58,6 @@ pyzmq==25.1.0
 requests==2.31.0
 Shimmy==1.1.0
 six==1.16.0
--e git+ssh://git@github.com/Vachonni/RL_Connect4.git@f449807728cb5eccba3f2e94edd30396ca422000#egg=src
 stable-baselines3==2.0.0a13
 stack-data==0.6.2
 sympy==1.12
