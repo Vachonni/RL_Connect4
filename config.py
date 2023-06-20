@@ -20,3 +20,5 @@ PATH_MEW_MODEL = os.path.join(path_models, "fifth_agent")
 
 #%%
 N_ROUNDS = 100
+
+N_IT = 60000
