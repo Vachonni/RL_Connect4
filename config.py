@@ -5,9 +5,11 @@ import os
 #%%
 N_ROUNDS = 100
 
-N_IT = 1000
+N_IT = 5000
 
-PATIENCE = 20
+N_LEARNING = 10
+
+PATIENCE = 10
 
 
 #%% PATH CONFIG
@@ -27,18 +29,18 @@ path_plots = os.path.join(path_parent, "RL_Connect4", "artifacts", "plots")
 #%% MODELS PATHS
 # PATH_BASE_MODEL = "random"
 # PATH_BASE_MODEL = os.path.join(path_models, "fourth_agent")
-PATH_BASE_MODEL = os.path.join(path_models, "stop_agent_6_1000_100")
+PATH_BASE_MODEL = os.path.join(path_models, f"stop_agent_{N_IT}_{N_ROUNDS}_i_")
 
 PATH_ADVERSARY_MODEL = os.path.join(path_models, "stop_agent_6_1000_100")
 # PATH_ADVERSARY_MODEL = os.path.join(path_models, "fourth_agent")
 
-PATH_MEW_MODEL = os.path.join(path_models, f"stop_agent_6_{N_IT}_{N_ROUNDS}")
+PATH_MEW_MODEL = os.path.join(path_models, f"stop_agent_{N_IT}_{N_ROUNDS}_i_")
 
 
 #%% LEARNING CURVES PATHS
-PATH_LEARNING_CURVES = os.path.join(path_learning_curves, f"df_wins_6_{N_IT}_{N_ROUNDS}")
+PATH_LEARNING_CURVES = os.path.join(path_learning_curves, f"df_wins_{N_IT}_{N_ROUNDS}_i_")
 
 
 #%% PLOTS PATHS
-PATH_PLOT = os.path.join(path_plots, f"graph_6_{N_IT}_{N_ROUNDS}")
+PATH_PLOT = os.path.join(path_plots, f"graph_{N_IT}_{N_ROUNDS}_i_")
 
