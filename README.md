@@ -16,7 +16,7 @@ OBSERVATIONS:
 NEXT STEPS:
 - Try with a model that has more capacity (SEE OBSERVATIONS)
 - Keep learning from all (?) previous agents (to avoid catastrophic forgetting) (SEE OBSERVATIONS)
-- Config as YAML ()
+- Config as YAML (ex: https://datacrayon.com/practical-evolutionary-algorithms/yaml-for-configuration-files/)
 - Delete KaggleLearn (not matching ModelpathToAgent anymore)
 
 
