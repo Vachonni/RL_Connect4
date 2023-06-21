@@ -17,7 +17,11 @@ def play_once(path_base_model, path_adv_model, render=True):
 
     # Two random agents play one game round
     details = env.run([base_agent, adv_agent])
-    print(f"==> Winner: {details[0][-1]['observation']['mark']}")
+    print(details)
+    if details[-1][0]['reward'] == 1:
+        print("==> Winner: base_agent (1)")
+    else:
+        print("==> Winner: adv_agent (2)")
 
     # Visual of the game
     if render:
