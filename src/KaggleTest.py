@@ -77,9 +77,9 @@ class CustomCNN(BaseFeaturesExtractor):
         # CxHxW images (channels first)
         n_input_channels = observation_space.shape[0]
         self.cnn = nn.Sequential(
-            nn.Conv2d(n_input_channels, 32, kernel_size=4, stride=1, padding=1),
+            nn.Conv2d(n_input_channels, 32, kernel_size=3, stride=1, padding=0),
             nn.ReLU(),
-            nn.Conv2d(32, 64, kernel_size=4, stride=1, padding=1),
+            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=0),
             nn.ReLU(),
             nn.Flatten(),
         )
@@ -91,9 +91,7 @@ class CustomCNN(BaseFeaturesExtractor):
             ).shape[1]
 
         self.linear = nn.Sequential(
-            nn.Linear(n_flatten, 64), 
-            nn.ReLU(),
-            nn.Linear(64, features_dim), 
+            nn.Linear(n_flatten, features_dim), 
             nn.ReLU())
 
     def forward(self, observations: th.Tensor) -> th.Tensor:
