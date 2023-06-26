@@ -27,6 +27,9 @@ def play_once(path_base_model, path_adv_model, render=True):
     if render:
         env.render(mode="ipython")
 
+    # # Run interactive game
+    # env.play([base_agent, None])
+
     
 def play_multi(path_base_model, path_adv_model, n_rounds=1000):
     # Load agents

@@ -72,7 +72,7 @@ class ConnectFourGym(gym.Env):
 # Neural network for predicting action values
 class CustomCNN(BaseFeaturesExtractor):
     
-    def __init__(self, observation_space: gym.spaces.Box, features_dim: int=128):
+    def __init__(self, observation_space: gym.spaces.Box, features_dim: int=7):
         super(CustomCNN, self).__init__(observation_space, features_dim)
         # CxHxW images (channels first)
         n_input_channels = observation_space.shape[0]
@@ -90,7 +90,9 @@ class CustomCNN(BaseFeaturesExtractor):
                 th.as_tensor(observation_space.sample()[None]).float()
             ).shape[1]
 
-        self.linear = nn.Sequential(nn.Linear(n_flatten, features_dim), nn.ReLU())
+        self.linear = nn.Sequential(
+            nn.Linear(n_flatten, features_dim), 
+            nn.ReLU())
 
     def forward(self, observations: th.Tensor) -> th.Tensor:
         return self.linear(self.cnn(observations))
@@ -98,8 +100,10 @@ class CustomCNN(BaseFeaturesExtractor):
 policy_kwargs = dict(
     features_extractor_class=CustomCNN,
 )
-        
 
+# Check architecture          
+ins = CustomCNN(gym.spaces.Box(low=0, high=2, shape=(1,6,7), dtype=int))
+print(ins) 
 
 
     
