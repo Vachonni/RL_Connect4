@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.10.12-bullseye
 
 RUN pip install --upgrade pip
 RUN apt-get update && apt-get install -y \
@@ -6,14 +6,14 @@ RUN apt-get update && apt-get install -y \
     swig \
     cmake
 
-# Set the working directory to /home
-WORKDIR /home
+# Copy the current directory contents into the container at /app (do not use home)
+COPY . /app
 
-# Copy the current directory contents into the container at /home
-COPY . /home
+# Set the working directory to /app
+WORKDIR /app
 
-# Install any additional dependencies you need
+# Install any additional dependencies you need 
 RUN pip install -r requirements.txt 
 
-# Install local folder as Python module
+# Install local folder as Python module (will use setup.py from local folder, here WORDIR or /app)
 RUN pip install -e .
