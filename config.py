@@ -5,7 +5,7 @@ import os
 #%%
 N_ROUNDS = 100
 
-N_IT = 60000     # Size of the buffer, i.e. number of turns we train on
+N_IT = 1000     # Size of the buffer, i.e. number of turns we train on
 
 N_LEARNING = 10
 
