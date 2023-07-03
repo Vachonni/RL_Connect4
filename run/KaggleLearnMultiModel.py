@@ -9,7 +9,7 @@ import pandas as pd
 
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs, get_win_percentages
 from src.ModelToAgent import modelpath_to_agent, model_to_agent
-from config import PATH_MEW_MODEL, N_ROUNDS, N_IT, N_LEARNING
+from config import PATH_MEW_MODEL, N_ROUNDS, N_IT, N_LEARNING, EVAL_TRESHOLD
 
 
 def learn_once(path_base_model, path_new_model, n_it=60000, save=True):
@@ -74,7 +74,7 @@ def learn_against_list_models(list_models, path_new_model, n_it=60000, n_rounds=
     Function to train a model against a list of models.
     """
 
-    eval = {"new_model_wins": [], "base_model": []}
+    eval = {"new_model_wins": [], "base_model": [], "eval_avrg": []}
     qt_models = len(list_models)
 
     # Train once against each model, random order
@@ -89,9 +89,15 @@ def learn_against_list_models(list_models, path_new_model, n_it=60000, n_rounds=
         print(f"New agent win ratio {wins_new_agent}.")
         eval["new_model_wins"].append(wins_new_agent)
         eval["base_model"].append(os.path.basename(path_base_model))
+        eval["eval_avrg"].append(0.5)
+    
+    print("Initial shuffle training againsts all models COMPLETED")
 
     # Until new model average win ratio is lower than 50% against last qt_models wins, continue training it agains models selected randomly
-    while sum(eval["new_model_wins"][-qt_models:]) / qt_models < 0.5:
+    eval_avrg = sum(eval["new_model_wins"][-qt_models:]) / qt_models
+    print(f"\n--> Evaluation average is at: {eval_avrg}, threshold at {EVAL_TRESHOLD}.")
+    eval["eval_avrg"][-1] = eval_avrg
+    while eval_avrg < EVAL_TRESHOLD:
         # Select a model randomly
         path_base_model = random.choice(list_models)
         print(f"\n\nTraining against {os.path.basename(path_base_model)}.")
@@ -100,8 +106,11 @@ def learn_against_list_models(list_models, path_new_model, n_it=60000, n_rounds=
                                                  path_new_model=path_new_model,
                                                  n_it=n_it)
         print(f"New agent win ratio {wins_new_agent}.")
+        eval_avrg = sum(eval["new_model_wins"][-qt_models:]) / qt_models
+        print(f"\n--> Evaluation average is at: {eval_avrg}, threshold at {EVAL_TRESHOLD}.")
         eval["new_model_wins"].append(wins_new_agent)
         eval["base_model"].append(os.path.basename(path_base_model))
+        eval["eval_avrg"].append(eval_avrg)
     
     # Save evaluation
     outputs_dir = os.path.dirname(os.path.dirname((path_new_model)))
