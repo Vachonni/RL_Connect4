@@ -1,17 +1,22 @@
 # Learning stop criteria
 
 #%%
+import os 
+
 import pandas as pd
+
+from azureml.core.run import Run
 
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs, get_win_percentages
 from src.ModelToAgent import modelpath_to_agent, modelpath_to_model, model_to_agent
 from config import N_ROUNDS, N_IT, N_LEARNING, PATIENCE, PATH_BASE_MODEL, PATH_MEW_MODEL, PATH_LEARNING_CURVES, PATH_PLOT
 
+run = Run.get_context()
 
-def learn_to_stop(path_base_model, path_new_model, n_it=1000, n_rounds=100):
+
+def learn_to_stop(path_base_model, path_new_model, i, n_it=1000, n_rounds=100):
     """The base model is the one we want to learn to beat.
     Hence, it is the adversary agent and the model we train."""
-
 
     # AGENT SETUP
     # Load adversary agent (the one we want to learn to beat)
@@ -30,9 +35,9 @@ def learn_to_stop(path_base_model, path_new_model, n_it=1000, n_rounds=100):
     patience = PATIENCE
     stop_criteria = False
 
-
+    # TRAINING LOOP
     while stop_criteria is False:
-        print(f"\n\nRound: {len(all_wins['wins_vs_base'])} -- Score to beat: {max_win}")
+        print(f"\n\nRound: {i}.{len(all_wins['wins_vs_base'])} -- Score to beat: {max_win}")
         # Save scores
         all_wins["wins_vs_base"].append(new_win)
         all_wins["wins_vs_random"].append(random_win)
@@ -42,6 +47,7 @@ def learn_to_stop(path_base_model, path_new_model, n_it=1000, n_rounds=100):
             print("New agent is better than old agent, saving new model.")
             # save new model
             max_win = new_win
+            # Save improved model locally
             model.save(path_new_model)
             not_improving = []
         else:
@@ -68,11 +74,19 @@ def learn_to_stop(path_base_model, path_new_model, n_it=1000, n_rounds=100):
                                          agent2=new_agent,
                                          n_rounds=n_rounds)        
 
+    # LOGGING RESULTS   
+    run.log("max_win", max_win)
+
     # All wins as dataframe
     df_wins = pd.DataFrame(all_wins)
 
     # Add column with number of iterations
     df_wins["n_it"] = df_wins.index * n_it
+
+    # Save best model to Azure (by loading it from local)
+    new_model_name = os.path.basename(path_new_model)
+    az_path_new_model = path_new_model + ".zip"
+    run.upload_file(name=new_model_name, path_or_stream=az_path_new_model)
 
     return df_wins, max_win
 
@@ -97,6 +111,7 @@ def learn_to_stop_multi(path_base_model,
 
         df_wins, max_win = learn_to_stop(path_base_model_i,
                                          path_new_model_i,
+                                         i,
                                          n_it,
                                          n_rounds)
 
@@ -111,10 +126,13 @@ def learn_to_stop_multi(path_base_model,
                         y=["wins_vs_base", "wins_vs_random"], 
                         title=f"Win ratio {new_model_name}",
                         ylabel="ratio").get_figure()
-        # Save the plot with panqdas plot
+        # Save the plot with pandas plot
         fig.savefig(path_plot_i+str(int(max_win*100))+".png")
 
-        # 
+        # Save image log_image to Azure
+        run.log_image(name="Learning curves",
+                      plot=fig)
+
     
 
 #%%
@@ -127,6 +145,7 @@ if __name__ == "__main__":
                         n_it=N_IT,
                         n_rounds=N_ROUNDS,
                         n_learning=N_LEARNING)
+    
 
 
 

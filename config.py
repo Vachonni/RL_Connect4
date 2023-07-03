@@ -5,27 +5,25 @@ import os
 #%%
 N_ROUNDS = 100
 
-N_IT = 60000     # Size of the buffer, i.e. number of turns we train on
+N_IT = 1000     # Size of the buffer, i.e. number of turns we train on
 
 N_LEARNING = 10
 
 PATIENCE = 4
 
-MODEL_NAME= f"Origin_Out7_{N_IT}_{N_ROUNDS}_"
-MODEL_NAME_I = MODEL_NAME + "i_"
+MODEL_NAME= f"AZ_Origin_Out7_{N_IT}_{N_ROUNDS}_"
+MODEL_NAME_I = MODEL_NAME + "i_" 
 
 
 #%% PATH CONFIG
-# Get path of current directory
-path_config = os.getcwd()
-# Get path parent RL_Connect4
-path_parent = path_config.split("RL_Connect4")[0]
+# Get the directory of the config script, that is at the root of the project
+base_dir = os.path.dirname(os.path.abspath(__file__))
 # Path to models
-path_models = os.path.join(path_parent, "RL_Connect4", "artifacts", "models")
+path_models = os.path.join(base_dir, "outputs", "models")
 # Path to learning curves
-path_learning_curves = os.path.join(path_parent, "RL_Connect4", "artifacts", "learning_curves")
+path_learning_curves = os.path.join(base_dir, "outputs", "learning_curves")
 # Path to plots
-path_plots = os.path.join(path_parent, "RL_Connect4", "artifacts", "plots")
+path_plots = os.path.join(base_dir, "outputs", "plots")
 
 
 
@@ -35,7 +33,7 @@ path_plots = os.path.join(path_parent, "RL_Connect4", "artifacts", "plots")
 # PATH_BASE_MODEL = os.path.join(path_models, f"stop_agent_5000_100_2_")
 # PATH_BASE_MODEL = os.path.join(path_models, f"stop_agent_{N_IT}_{N_ROUNDS}_i_")
 # PATH_BASE_MODEL = os.path.join(path_models, "Kernel4_5000_100_2_")
-PATH_BASE_MODEL = os.path.join(path_models, MODEL_NAME + "1_")
+PATH_BASE_MODEL = os.path.join(path_models, MODEL_NAME_I)
 
 # PATH_ADVERSARY_MODEL = "random"
 # PATH_ADVERSARY_MODEL = os.path.join(path_models, "stop_agent_6_1000_100")
