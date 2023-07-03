@@ -46,8 +46,6 @@ experiment = Experiment(workspace=ws, name='kaggle-learn-stop')
 # Submit the experiment
 run = experiment.submit(config=script_run_config)
 
-run.log('tryingLOG', "is it working?")
-
 # Run the experiment
 run.wait_for_completion(show_output=True)
                         
