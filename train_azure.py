@@ -35,21 +35,21 @@ except:
 
     
 
-# # Create Azure ScriptRunConfig
-# script_run_config = ScriptRunConfig(source_directory='./run',
-#                                     script='KaggleLearnStop.py',
-#                                     environment=env)                                    
+# Create Azure ScriptRunConfig
+script_run_config = ScriptRunConfig(source_directory='./run',
+                                    script='KaggleLearnStop.py',
+                                    environment=env)                                    
 
-# # Create a new experiment
-# experiment = Experiment(workspace=ws, name='kaggle-learn-stop')
+# Create a new experiment
+experiment = Experiment(workspace=ws, name='kaggle-learn-stop')
 
-# # Submit the experiment
-# run = experiment.submit(config=script_run_config)
+# Submit the experiment
+run = experiment.submit(config=script_run_config)
 
-# run.log('tryingLOG', "is it working?")
+run.log('tryingLOG', "is it working?")
 
-# # Run the experiment
-# run.wait_for_completion(show_output=True)
+# Run the experiment
+run.wait_for_completion(show_output=True)
                         
 
 

@@ -12,20 +12,18 @@ N_LEARNING = 10
 PATIENCE = 4
 
 MODEL_NAME= f"Origin_Out7_{N_IT}_{N_ROUNDS}_"
-MODEL_NAME_I = MODEL_NAME + "i_"
+MODEL_NAME_I = MODEL_NAME + "i_" 
 
 
 #%% PATH CONFIG
-# Get path of current directory
-path_config = os.getcwd()
-# Get path parent RL_Connect4
-path_parent = path_config.split("RL_Connect4")[0]
+# Get the directory of the config script, that is at the root of the project
+base_dir = os.path.dirname(os.path.abspath(__file__))
 # Path to models
-path_models = os.path.join(path_parent, "RL_Connect4", "artifacts", "models")
+path_models = os.path.join(base_dir, "outputs", "models")
 # Path to learning curves
-path_learning_curves = os.path.join(path_parent, "RL_Connect4", "artifacts", "learning_curves")
+path_learning_curves = os.path.join(base_dir, "outputs", "learning_curves")
 # Path to plots
-path_plots = os.path.join(path_parent, "RL_Connect4", "artifacts", "plots")
+path_plots = os.path.join(base_dir, "outputs", "plots")
 
 
 
