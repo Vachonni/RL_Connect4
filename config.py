@@ -11,7 +11,7 @@ N_LEARNING = 10
 
 PATIENCE = 4
 
-MODEL_NAME= f"AZ_Origin_Out7_{N_IT}_{N_ROUNDS}_"
+MODEL_NAME= f"MULTI_MODELS_{N_IT}_{N_ROUNDS}_"
 MODEL_NAME_I = MODEL_NAME + "i_" 
 
 
@@ -34,6 +34,7 @@ path_plots = os.path.join(base_dir, "outputs", "plots")
 # PATH_BASE_MODEL = os.path.join(path_models, f"stop_agent_{N_IT}_{N_ROUNDS}_i_")
 # PATH_BASE_MODEL = os.path.join(path_models, "Kernel4_5000_100_2_")
 PATH_BASE_MODEL = os.path.join(path_models, MODEL_NAME_I)
+# LIST_PATH_BASE_MODEL = [MODEL_NAME_I + str(i) for i in range(N_LEARNING)]
 
 # PATH_ADVERSARY_MODEL = "random"
 # PATH_ADVERSARY_MODEL = os.path.join(path_models, "stop_agent_6_1000_100")
