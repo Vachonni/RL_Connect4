@@ -5,7 +5,7 @@ import os
 #%%
 N_ROUNDS = 100
 
-N_IT = 1000     # Size of the buffer, i.e. number of turns we train on
+N_IT = 60000     # Size of the buffer, i.e. number of turns we train on
 
 N_LEARNING = 10
 
@@ -13,8 +13,9 @@ PATIENCE = 4
 
 EVAL_TRESHOLD = 0.6
 
-MODEL_NAME= f"XMULTI_MODELS_{N_IT}_{N_ROUNDS}_"
+MODEL_NAME= f"CI_MULTI_MODELS_{N_IT}_{N_ROUNDS}_"
 MODEL_NAME_I = MODEL_NAME + "i_" 
+
 
 
 #%% PATH CONFIG
@@ -30,13 +31,13 @@ path_plots = os.path.join(base_dir, "outputs", "plots")
 
 
 #%% MODELS PATHS
+
 # PATH_BASE_MODEL = "random"
 # PATH_BASE_MODEL = os.path.join(path_models, "fourth_agent")
 # PATH_BASE_MODEL = os.path.join(path_models, f"stop_agent_5000_100_2_")
 # PATH_BASE_MODEL = os.path.join(path_models, f"stop_agent_{N_IT}_{N_ROUNDS}_i_")
 # PATH_BASE_MODEL = os.path.join(path_models, "Kernel4_5000_100_2_")
 PATH_BASE_MODEL = os.path.join(path_models, MODEL_NAME_I)
-# LIST_PATH_BASE_MODEL = [MODEL_NAME_I + str(i) for i in range(N_LEARNING)]
 
 # PATH_ADVERSARY_MODEL = "random"
 # PATH_ADVERSARY_MODEL = os.path.join(path_models, "stop_agent_6_1000_100")
@@ -47,6 +48,9 @@ PATH_ADVERSARY_MODEL = os.path.join(path_models, MODEL_NAME + "3_")
 
 PATH_MEW_MODEL = os.path.join(path_models, MODEL_NAME_I)
 
+
+LIST_OF_MODELS = [os.path.join(path_models, 'Origin_Out7_60000_100_' + f"{i}_") for i in range(6)]
+print(LIST_OF_MODELS)
 
 #%% LEARNING CURVES PATHS
 PATH_LEARNING_CURVES = os.path.join(path_learning_curves, MODEL_NAME_I)

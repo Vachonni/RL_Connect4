@@ -9,7 +9,7 @@ import pandas as pd
 
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs, get_win_percentages
 from src.ModelToAgent import modelpath_to_agent, model_to_agent
-from config import PATH_MEW_MODEL, N_ROUNDS, N_IT, N_LEARNING, EVAL_TRESHOLD
+from config import PATH_MEW_MODEL, N_ROUNDS, N_IT, N_LEARNING, EVAL_TRESHOLD, LIST_OF_MODELS
 
 
 def learn_once(path_base_model, path_new_model, n_it=60000, save=True):
@@ -142,8 +142,15 @@ def learn_against_list_models_from_scratch(path_new_model,
 
 if __name__=="__main__":
 
-    learn_against_list_models_from_scratch(path_new_model=PATH_MEW_MODEL,
-                                           n_learning=N_LEARNING,
-                                           n_it=N_IT,
-                                           n_rounds=N_ROUNDS)
+    # learn_against_list_models_from_scratch(path_new_model=PATH_MEW_MODEL,
+    #                                        n_learning=N_LEARNING,
+    #                                        n_it=N_IT,
+    #                                        n_rounds=N_ROUNDS)
+    
+
+    learn_against_list_models(list_models=LIST_OF_MODELS,
+                              path_new_model=PATH_MEW_MODEL,
+                              n_it=N_IT,
+                              n_rounds=N_ROUNDS)
+    
     
