@@ -49,7 +49,7 @@ PATH_ADVERSARY_MODEL = os.path.join(path_models, MODEL_NAME + "3_")
 PATH_MEW_MODEL = os.path.join(path_models, MODEL_NAME_I)
 
 
-LIST_OF_MODELS = [os.path.join(path_models, 'Origin_Out7_60000_100_' + f"{i}_") for i in range(6)]
+LIST_OF_MODELS = [os.path.join(path_models, 'Origin_Out7_60000_100_' + f"{i}_") for i in range(6)] + [os.path.join(path_models, 'CI_MULTI_MODELS_60000_100_00_.zip')]
 print(LIST_OF_MODELS)
 
 #%% LEARNING CURVES PATHS

@@ -120,18 +120,24 @@ def learn_against_list_models(list_models, path_new_model, n_it=60000, n_rounds=
     df_eval.to_csv(eval_path, index=False)
 
 
-def learn_against_list_models_from_scratch(path_new_model,
+def learn_against_list_models_and_new_ones(list_of_models, 
+                                           path_new_model,
                                            n_learning,
                                            n_it,
                                            n_rounds):
-    # Learn against each model list created in previous levels, starting from random
+    """
+    Function to train a model against a list of models. 
+    If you want ot learn from scratch, set list_of_models to [].
+    """
+
+    # Learn against each model in the list, plus the ones newly  created in previous levels, including random
     for i in range(n_learning):
         if i == 0:
-            list_models = ["random"]
+            aug_list_models = ["random"] + list_of_models
         else:
-            list_models = ["random"] + [path_new_model.replace("_i_", f"_{i}_") for i in range(i)]
+            aug_list_models = ["random"] + list_of_models + [path_new_model.replace("_i_", f"_{i}_") for i in range(i)]
 
-        learn_against_list_models(list_models=list_models,
+        learn_against_list_models(list_models=aug_list_models,
                                   path_new_model=path_new_model.replace("_i_", f"_{i}_"),
                                   n_it=n_it,
                                   n_rounds=n_rounds)
@@ -142,15 +148,17 @@ def learn_against_list_models_from_scratch(path_new_model,
 
 if __name__=="__main__":
 
-    # learn_against_list_models_from_scratch(path_new_model=PATH_MEW_MODEL,
-    #                                        n_learning=N_LEARNING,
-    #                                        n_it=N_IT,
-    #                                        n_rounds=N_ROUNDS)
+    # learn_against_list_models(list_models=LIST_OF_MODELS,
+    #                           path_new_model=PATH_MEW_MODEL,
+    #                           n_it=N_IT,
+    #                           n_rounds=N_ROUNDS)
+    
+    learn_against_list_models_and_new_ones(list_of_models=LIST_OF_MODELS,
+                                           path_new_model=PATH_MEW_MODEL,
+                                           n_learning=N_LEARNING,
+                                           n_it=N_IT,
+                                           n_rounds=N_ROUNDS)
     
 
-    learn_against_list_models(list_models=LIST_OF_MODELS,
-                              path_new_model=PATH_MEW_MODEL,
-                              n_it=N_IT,
-                              n_rounds=N_ROUNDS)
     
     
