@@ -1,6 +1,7 @@
 import os
 
-from azureml.core import Workspace, Experiment, Environment, ScriptRunConfig
+from azureml.core import Workspace, Experiment, Environment, ScriptRunConfig, Datastore
+from azureml.core.compute import ComputeTarget
 from azureml.core.authentication import ServicePrincipalAuthentication
 
 
@@ -21,6 +22,14 @@ ws = Workspace.get(name=os.environ.get('AML_WORKSPACE_NAME'),
                    resource_group=os.environ.get('AML_RESOURCE_GROUP'),
                    auth=svc_pr)
 
+# # Get compute target
+# compute_target = ComputeTarget(workspace=ws, name='SmallClusterCompute')
+
+# # Move code to compute target
+# # Get the default datastore
+# datastore = ws.get_default_datastore()
+# # Upload the code to the datastore
+# datastore.upload(src_dir='../RL_Connect4/', target_path='RL_Connect4')
 
 # Try to get existing environment. 
 # If fails, create a new one and register it
@@ -38,7 +47,8 @@ except:
 # Create Azure ScriptRunConfig
 script_run_config = ScriptRunConfig(source_directory='./run',
                                     script='KaggleLearnStop.py',
-                                    environment=env)                                    
+                                    environment=env,
+                                    compute_target='SmallClusterCompute')                                    
 
 # Create a new experiment
 experiment = Experiment(workspace=ws, name='kaggle-learn-stop')
