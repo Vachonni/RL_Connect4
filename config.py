@@ -5,15 +5,15 @@ import os
 #%%
 N_ROUNDS = 100
 
-N_IT = 60000     # Size of the buffer, i.e. number of turns we train on
+N_IT = 60000    # Size of the buffer, i.e. number of turns we train on
 
 N_LEARNING = 10
 
 PATIENCE = 4
 
-EVAL_TRESHOLD = 0.6
+EVAL_TRESHOLD = 0.7
 
-MODEL_NAME= f"CI_MULTI_MODELS_{N_IT}_{N_ROUNDS}_"
+MODEL_NAME= f"CI_WORST_MULTI_MODELS_{N_IT}_{N_ROUNDS}_"
 MODEL_NAME_I = MODEL_NAME + "i_" 
 
 
@@ -50,6 +50,7 @@ PATH_MEW_MODEL = os.path.join(path_models, MODEL_NAME_I)
 
 
 LIST_OF_MODELS = [os.path.join(path_models, 'Origin_Out7_60000_100_' + f"{i}_") for i in range(6)] + [os.path.join(path_models, 'CI_MULTI_MODELS_60000_100_00_.zip')]
+# LIST_OF_MODELS =  [os.path.join(path_models, 'CI_MULTI_MODELS_60000_100_00_.zip')]
 print(LIST_OF_MODELS)
 
 #%% LEARNING CURVES PATHS

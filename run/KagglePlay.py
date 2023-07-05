@@ -62,6 +62,17 @@ def play_list(list_of_models, path_adv_model, n_rounds=1000):
     return results
 
 
+def play_list_score(list_of_models, path_adv_model, n_rounds=1000):
+
+    results = play_list(list_of_models=list_of_models, 
+                        path_adv_model=path_adv_model, 
+                        n_rounds=n_rounds)
+    df_results = pd.DataFrame(results)
+    avrg_score = df_results["new_model_wins"].mean()
+
+    return df_results, avrg_score
+
+
 
 if __name__ == "__main__":
     #%%
@@ -71,10 +82,9 @@ if __name__ == "__main__":
     _, _ = play_multi(path_base_model=PATH_BASE_MODEL, path_adv_model=PATH_ADVERSARY_MODEL, n_rounds=N_ROUNDS)
 
     #%%
-    results = play_list(list_of_models=LIST_OF_MODELS, path_adv_model=PATH_MEW_MODEL, n_rounds=N_ROUNDS)
-    df_results = pd.DataFrame(results)
+    df_results, avrg_score = play_list_score(list_of_models=LIST_OF_MODELS, path_adv_model=PATH_MEW_MODEL, n_rounds=N_ROUNDS)
     print(df_results)
-    print(f'==> Mean: {df_results["new_model_wins"].mean()}')
+    print(f'==> Mean: {avrg_score}')
 
 
 

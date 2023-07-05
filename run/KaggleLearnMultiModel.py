@@ -8,7 +8,8 @@ import random
 import pandas as pd
 
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs, get_win_percentages
-from src.ModelToAgent import modelpath_to_agent, model_to_agent
+from src.ModelToAgent import modelpath_to_model, modelpath_to_agent, model_to_agent
+from run.KagglePlay import play_list_score
 from config import PATH_MEW_MODEL, N_ROUNDS, N_IT, N_LEARNING, EVAL_TRESHOLD, LIST_OF_MODELS
 
 
@@ -120,27 +121,67 @@ def learn_against_list_models(list_models, path_new_model, n_it=60000, n_rounds=
     df_eval.to_csv(eval_path, index=False)
 
 
-def learn_against_list_models_and_new_ones(list_of_models, 
-                                           path_new_model,
-                                           n_learning,
-                                           n_it,
-                                           n_rounds):
+def learn_against_list_models_by_worst(list_models, path_new_model, n_it=60000, n_rounds=100):
+    
+    # If new model does not exist, create it as random model
+    if not os.path.exists(path_new_model+".zip"):
+        print(f"\n\nNew model {os.path.basename(path_new_model)} does not exist. Creating random model.\n")
+        new_model = modelpath_to_model('random')
+        new_model.save(path_new_model)
+
+    # Initial evaluation of new model against all models
+    df_eval, avrg_eval = play_list_score(list_of_models=list_models,
+                                         path_adv_model=path_new_model,
+                                         n_rounds=n_rounds)
+    print(f"\n\nInitial evaluation average is at: {avrg_eval}, threshold at {EVAL_TRESHOLD}.")
+    print(f"\n{df_eval}")
+
+    # Keep training until new model average win ratio is higher than EAVAL_TRESHOLD
+    while avrg_eval < EVAL_TRESHOLD:
+        # Select worst model
+        worst_model = df_eval[df_eval["new_model_wins"] == df_eval["new_model_wins"].min()]["base_model"].values[0]
+        print(f"\n\nTraining against {worst_model}.")
+        path_worst_model = os.path.join(os.path.dirname(path_new_model), worst_model)
+        # Train new model against wosrt model
+        _, _ = learn_once(path_base_model=path_worst_model,
+                          path_new_model=path_new_model,
+                          n_it=n_it, save=True)
+        # Evaluate new model against all models
+        df_eval, avrg_eval = play_list_score(list_of_models=list_models,
+                                             path_adv_model=path_new_model,
+                                             n_rounds=n_rounds)
+        print(f"\n--> Evaluation average is at: {avrg_eval}, threshold at {EVAL_TRESHOLD}.")
+        print(f"\n{df_eval}")
+
+    # Save evaluation
+    outputs_dir = os.path.dirname(os.path.dirname((path_new_model)))
+    eval_path = outputs_dir + "/learning_curves/" + os.path.basename(path_new_model)
+    print(f"\nTraining of model {os.path.basename(path_new_model)} COMPLETED.")
+    df_eval.to_csv(eval_path, index=False)
+
+
+def learn_against_list_models_and_new_ones_by_worst(list_of_models, 
+                                                    path_new_model,
+                                                    n_learning,
+                                                    n_it,
+                                                    n_rounds):
     """
-    Function to train a model against a list of models. 
+    Function to train a model against a list of models by worst. 
     If you want ot learn from scratch, set list_of_models to [].
+    NOTE: path_new_model must contain _i_ to be replaced by the iteration number ********
     """
 
-    # Learn against each model in the list, plus the ones newly  created in previous levels, including random
+    # Learn against each model in the list, plus the ones newly created in previous levels, including random
     for i in range(n_learning):
         if i == 0:
             aug_list_models = ["random"] + list_of_models
         else:
             aug_list_models = ["random"] + list_of_models + [path_new_model.replace("_i_", f"_{i}_") for i in range(i)]
 
-        learn_against_list_models(list_models=aug_list_models,
-                                  path_new_model=path_new_model.replace("_i_", f"_{i}_"),
-                                  n_it=n_it,
-                                  n_rounds=n_rounds)
+        learn_against_list_models_by_worst(list_models=aug_list_models,
+                                           path_new_model=path_new_model.replace("_i_", f"_{i}_"),
+                                           n_it=n_it,
+                                           n_rounds=n_rounds)
                                   
 
     
@@ -153,11 +194,11 @@ if __name__=="__main__":
     #                           n_it=N_IT,
     #                           n_rounds=N_ROUNDS)
     
-    learn_against_list_models_and_new_ones(list_of_models=LIST_OF_MODELS,
-                                           path_new_model=PATH_MEW_MODEL,
-                                           n_learning=N_LEARNING,
-                                           n_it=N_IT,
-                                           n_rounds=N_ROUNDS)
+    learn_against_list_models_and_new_ones_by_worst(list_of_models=LIST_OF_MODELS,
+                                                    path_new_model=PATH_MEW_MODEL,
+                                                    n_learning=N_LEARNING,
+                                                    n_it=N_IT,
+                                                    n_rounds=N_ROUNDS)
     
 
     
