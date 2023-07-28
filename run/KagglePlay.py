@@ -1,10 +1,14 @@
 
 #%%
+import os
+
+import pandas as pd
+
 from kaggle_environments import make
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs, get_win_percentages
 from src.ModelToAgent import modelpath_to_agent
 
-from config import PATH_BASE_MODEL, PATH_ADVERSARY_MODEL, N_ROUNDS
+from config import PATH_BASE_MODEL, PATH_ADVERSARY_MODEL, PATH_MEW_MODEL, N_ROUNDS, LIST_OF_MODELS
 
 #%%
 def play_once(path_base_model, path_adv_model, render=True):
@@ -37,15 +41,52 @@ def play_multi(path_base_model, path_adv_model, n_rounds=1000):
     adv_agent = modelpath_to_agent(path_adv_model)
 
     # Play games
-    _, _ = get_win_percentages(agent1=base_agent, 
-                               agent2=adv_agent, 
-                               n_rounds=n_rounds)
+    wins_base_agent, wins_new_agent  = get_win_percentages(agent1=base_agent, 
+                                                           agent2=adv_agent, 
+                                                           n_rounds=n_rounds)
     
+    return wins_base_agent, wins_new_agent 
 
-#%%
+    
+def play_list(list_of_models, path_adv_model, n_rounds=1000):
+
+    results = {"new_model_wins": [], "base_model": []}
+
+    for path_base_model in list_of_models:
+        _, wins_new_agent = play_multi(path_base_model=path_base_model,
+                                       path_adv_model=path_adv_model,
+                                       n_rounds=n_rounds)
+        results["new_model_wins"].append(wins_new_agent)
+        results["base_model"].append(os.path.basename(path_base_model))
+    
+    return results
+
+
+def play_list_score(list_of_models, path_adv_model, n_rounds=1000):
+
+    results = play_list(list_of_models=list_of_models, 
+                        path_adv_model=path_adv_model, 
+                        n_rounds=n_rounds)
+    df_results = pd.DataFrame(results)
+    avrg_score = df_results["new_model_wins"].mean()
+
+    return df_results, avrg_score
+
+
+
 if __name__ == "__main__":
-    play_once(path_base_model=PATH_BASE_MODEL, path_adv_model=PATH_ADVERSARY_MODEL, render=True)
     #%%
-    play_multi(path_base_model=PATH_BASE_MODEL, path_adv_model=PATH_ADVERSARY_MODEL, n_rounds=N_ROUNDS)
+    PATH_BASE_MODEL = LIST_OF_MODELS[5]
+    play_once(path_base_model=PATH_BASE_MODEL, path_adv_model=PATH_MEW_MODEL, render=True)
+    #%%
+    _, _ = play_multi(path_base_model=PATH_BASE_MODEL, path_adv_model=PATH_ADVERSARY_MODEL, n_rounds=N_ROUNDS)
+
+    #%%
+    df_results, avrg_score = play_list_score(list_of_models=LIST_OF_MODELS, path_adv_model=PATH_MEW_MODEL, n_rounds=N_ROUNDS)
+    print(df_results)
+    print(f'==> Mean: {avrg_score}')
 
 
+
+
+# %%

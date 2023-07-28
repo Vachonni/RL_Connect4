@@ -1,0 +1,10 @@
+new_model_wins,base_model,eval_avrg
+0.67,Origin_Out7_60000_100_4_,0.5
+0.61,Origin_Out7_60000_100_1_,0.5
+0.8,Origin_Out7_60000_100_3_,0.5
+0.98,Origin_Out7_60000_100_2_,0.5
+0.58,random,0.5
+0.9,CI_MULTI_MODELS_60000_100_00_.zip,0.5
+0.84,Origin_Out7_60000_100_5_,0.5
+0.67,CI_MULTI_MODELS_60000_100_0_,0.5
+0.88,Origin_Out7_60000_100_0_,0.77

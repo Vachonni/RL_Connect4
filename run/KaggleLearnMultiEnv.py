@@ -1,11 +1,16 @@
 """
-File to train models to play against other models.
+
+*** NOT WORKING ***
+
+File to train models to play against other multiple environements at the same time.
 Includes a function to train a model against models from all previous levels.
 """
 import os
 import random
 
 import pandas as pd
+
+from stable_baselines3.common.env_util import make_vec_env
 
 from src.KaggleTest import ConnectFourGym, PPO, policy_kwargs, get_win_percentages
 from src.ModelToAgent import modelpath_to_model, modelpath_to_agent, model_to_agent
@@ -184,7 +189,62 @@ def learn_against_list_models_and_new_ones_by_worst(list_of_models,
                                            n_rounds=n_rounds)
                                   
 
-    
+
+
+def learn_once_vec_env(list_of_models, path_new_model, n_it=60000, save=True):
+    """
+    Function to train a model once against another model.
+    """
+
+    list_env_adv = []
+
+    for model_path in list_of_models:
+        adv_agent = modelpath_to_agent(model_path)
+        env_adv = ConnectFourGym(agent2=adv_agent)
+        list_env_adv.append(env_adv)
+
+    vec_env = make_vec_env(list_env_adv)
+
+    # Set environment that will reply with adversary agent
+    new_model = PPO("CnnPolicy", vec_env, policy_kwargs=policy_kwargs, verbose=0)
+
+    # Train new model
+    new_model.learn(total_timesteps=n_it)
+
+    if save:
+        # Save model
+        new_model.save(path_new_model)
+
+    return new_model, adv_agent
+
+
+
+def learn_against_list_models_in_one_env(list_of_models, 
+                                         path_new_model,
+                                         n_learning,
+                                         n_it,
+                                         eval_rounds):
+    """
+    Function to train a model against a list of models in one env (a vec_env from stable_baseline). 
+    If you want ot learn from scratch, set list_of_models to [].
+    NOTE: path_new_model must contain _i_ to be replaced by the iteration number ********
+    """
+
+    # Learn against each model in the list, plus the ones newly created in previous levels, including random
+    for i in range(n_learning):
+        if i == 0:
+            aug_list_models = ["random"] + list_of_models
+        else:
+            aug_list_models = ["random"] + list_of_models + [path_new_model.replace("_i_", f"_{i}_") for i in range(i)]
+
+        learn_once_vec_env(list_of_models=aug_list_models,
+                           path_new_model=path_new_model.replace("_i_", f"_{i}_"),
+                           n_it=n_it)
+        
+
+
+
+
 
 
 if __name__=="__main__":
@@ -194,12 +254,17 @@ if __name__=="__main__":
     #                           n_it=N_IT,
     #                           n_rounds=N_ROUNDS)
     
-    learn_against_list_models_and_new_ones_by_worst(list_of_models=LIST_OF_MODELS,
-                                                    path_new_model=PATH_MEW_MODEL,
-                                                    n_learning=N_LEARNING,
-                                                    n_it=N_IT,
-                                                    n_rounds=N_ROUNDS)
+    # learn_against_list_models_and_new_ones_by_worst(list_of_models=LIST_OF_MODELS,
+    #                                                 path_new_model=PATH_MEW_MODEL,
+    #                                                 n_learning=N_LEARNING,
+    #                                                 n_it=N_IT,
+    #                                                 n_rounds=N_ROUNDS)
     
+    learn_against_list_models_in_one_env(list_of_models=LIST_OF_MODELS,
+                                         path_new_model=PATH_MEW_MODEL,
+                                         n_learning=N_LEARNING,
+                                         n_it=N_IT,
+                                         eval_rounds=N_ROUNDS)
 
     
     
