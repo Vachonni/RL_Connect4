@@ -1,7 +1,15 @@
 # RL_Connect4
 
-Possible to train with Google Colab, 
-but models can't to transfered (serialization issus known by StableBaselines)
+Possible to train with Google Colab, but models can't to transfered (serialization issus known by StableBaselines)
+
+TODO: 
+- Probably get rid of Kaggle and use prediction with derterministic=True (to avoid exploration when evaluating)
+- Try vecEnv
+
+
+## HP_tuning
+
+Too muych variance in the evaluation to be working. Probably missing a predict with deterministic=True.
 
 ## Connection to Azure ML
 
